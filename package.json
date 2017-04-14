@@ -9,10 +9,12 @@
     "build/static": "cp -r src/public/* dist",
     "build/js": "browserify src/js/app.js -t babelify --outfile dist/bundle.js",
     "build": "npm run clean && mkdir dist && npm run build/static && npm run build/js",
+    "build/docs": "npm run build && rm -rf docs && cp -R dist docs",
     "watch": "nodemon -w src/js --exec 'npm run build/js'",
     "server": "http-server dist",
     "start/dev": "npm run build && concurrently --kill-others --raw 'livereload dist' 'npm run watch' 'npm run server'",
-    "start": "npm run server"
+    "start": "npm run server",
+    "precommit": "diff dist docs"
   },
   "author": "",
   "license": "ISC",
