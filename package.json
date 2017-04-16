@@ -14,7 +14,7 @@
     "server": "http-server dist",
     "start/dev": "npm run build && concurrently --kill-others --raw 'livereload dist' 'npm run watch' 'npm run server'",
     "start": "npm run server",
-    "precommit": "diff dist docs"
+    "precommit": "npm run build/docs && git add docs"
   },
   "author": "",
   "license": "ISC",
