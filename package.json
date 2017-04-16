@@ -5,9 +5,10 @@
   "main": "index.js",
   "registry": "https://registry.npmjs.org/",
   "scripts": {
+    "format": "prettier --single-quote --no-semi --write 'src/js/**/*.js'",
     "clean": "rm -rf dist",
     "build/static": "cp -r src/public/* dist",
-    "build/js": "browserify src/js/app.js -t babelify -t csjs-injectify -t [cssify --global] --outfile dist/bundle.js",
+    "build/js": "npm run format && browserify src/js/app.js -t babelify -t csjs-injectify -t [cssify --global] --outfile dist/bundle.js",
     "build": "npm run clean && mkdir dist && npm run build/static && npm run build/js",
     "build/docs": "npm run build && rm -rf docs && cp -R dist docs",
     "watch": "nodemon -w src/js --exec 'npm run build/js'",
@@ -31,6 +32,7 @@
     "font-awesome": "^4.7.0",
     "http-server": "^0.9.0",
     "livereload": "^0.6.2",
-    "nodemon": "^1.11.0"
+    "nodemon": "^1.11.0",
+    "prettier-standard": "^3.0.1"
   }
 }
