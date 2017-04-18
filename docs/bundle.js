@@ -3481,12 +3481,8 @@ var logger = function logger(state, emitter) {
 };
 
 var updateBalance = function updateBalance(state) {
-  var balance = null;
   try {
-    balance = calculate(state.data);
-    var report = balance + '\n  ----  input  ----\n  ' + state.data;
-
-    state.report = report;
+    state.balance = calculate(state.data);
     state.error = null;
   } catch (e) {
     state.report = null;
@@ -3508,8 +3504,9 @@ var dataStore = function dataStore(state, emitter) {
   });
   emitter.on('send', function () {
     updateBalance(state);
+    var report = state.balance + '\n\n\n#### input ####\n' + state.data;
     if (!state.error) {
-      window.location = 'mailto:?subject=Accounts&body=' + encodeURIComponent(state.report);
+      window.location = 'mailto:?subject=Accounts&body=' + encodeURIComponent(report);
     }
     emitter.emit('render');
   });
@@ -3560,7 +3557,7 @@ var mainView = function mainView(state, emit) {
     emit('refresh');
   }), on(function (e) {
     emit('send');
-  }), state.report && (0, _html2.default)(_templateObject3, state.report), state.error && (0, _html2.default)(_templateObject4, state.error));
+  }), state.balance && (0, _html2.default)(_templateObject3, state.balance), state.error && (0, _html2.default)(_templateObject4, state.error));
 };
 var app = (0, _choo2.default)();
 app.use(logger);
@@ -3568,5 +3565,9 @@ app.use(dataStore);
 app.route('/', mainView);
 app.route('/accounts-web', mainView);
 app.mount('body');
+
+navigator.serviceWorker.register('service-worker.js', {
+  scope: '.'
+});
 
 },{"bulma/css/bulma.css":7,"choo":9,"choo/html":8,"csjs-injectify/csjs-inject":30,"cssify":51}]},{},[52]);

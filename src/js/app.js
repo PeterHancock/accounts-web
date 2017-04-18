@@ -21,14 +21,8 @@ const logger = (state, emitter) => {
 }
 
 const updateBalance = state => {
-  let balance = null
   try {
-    balance = calculate(state.data)
-    const report = `${balance}
-  ----  input  ----
-  ${state.data}`
-
-    state.report = report
+    state.balance = calculate(state.data)
     state.error = null
   } catch (e) {
     state.report = null
@@ -50,8 +44,13 @@ const dataStore = (state, emitter) => {
   })
   emitter.on('send', () => {
     updateBalance(state)
+    const report = `${state.balance}
+
+
+#### input ####
+${state.data}`
     if (!state.error) {
-      window.location = `mailto:?subject=Accounts&body=${encodeURIComponent(state.report)}`
+      window.location = `mailto:?subject=Accounts&body=${encodeURIComponent(report)}`
     }
     emitter.emit('render')
   })
@@ -140,7 +139,7 @@ const mainView = (state, emit) => html`
         </header>
         <div class="card-content">
           <div class="content">
-            ${state.report && html`<pre>${state.report}</pre>`}
+            ${state.balance && html`<pre>${state.balance}</pre>`}
             ${state.error && html`
               <div class="notification is-danger">
                 Format error:
@@ -159,3 +158,7 @@ app.use(dataStore)
 app.route('/', mainView)
 app.route('/accounts-web', mainView)
 app.mount('body')
+
+navigator.serviceWorker.register('service-worker.js', {
+  scope: '.'
+})
