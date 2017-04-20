@@ -1,16 +1,16 @@
 const CACHE_NAME = 'dependencies-cache'
 
-// Files required to make this app work offline
-const REQUIRED_FILES = [
+const offlineFiles = [
   'icon.png',
   'index.html',
-  '/', // Separate URL than index.html!
   'bundle.js'
 ]
 
+const githubPagesFiles = offlineFiles.map((f) => `accounts-web/${f}`)
+
 self.addEventListener('install', (event) => event.waitUntil(
     caches.open(CACHE_NAME)
-      .then((cache) => cache.addAll(REQUIRED_FILES))
+      .then((cache) => cache.addAll(['/', ...offlineFiles, ...githubPagesFiles]))
       .then(() => self.skipWaiting())
   )
 )
